@@ -1,0 +1,24 @@
+name: Update README Date
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update Date in README
+        run: |
+          # Pega a data atual no fuso de Brasília
+          DATA=$(TZ="America/Sao_Paulo" date +'%d/%m/%Y %H:%M')
+          # Substitui a linha que começa com "Atualizado em:"
+          sed -i "s/Atualizado em: .*/Atualizado em: $DATA/" README.md
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "saulo-lab@outlook.com"
+          git config --local user.name "GitHub Action Bot"
+          git add README.md
+          git commit -m "docs: data de atualização automatizada [skip ci]" || echo "Sem mudanças para commitar"
+          git push
